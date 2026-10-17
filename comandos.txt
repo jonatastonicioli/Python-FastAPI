@@ -1,0 +1,12 @@
+Instalação Bibliotecas
+
+python -m venv .venv
+pip install fastapi uvicorn sqlalchemy passlib[bcrypt] python-jose[cryptography] python-dotenv python-multipart
+
+fastapi - framework
+uvicorn- servidor que receve as requisições http (get e post)
+sqlalchemy - manipulação do banco dados direto no python
+passlib[bcrypt] - criptografa as senhas ao passar para o banco
+python-jose[cryptography]: - criação de tokens jwt, saber que o usuário esta logado dps do login
+python-dotenv - lê arquivos dentro do .env
+python-multipart - dependencia do python jose
