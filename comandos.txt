@@ -10,3 +10,15 @@ passlib[bcrypt] - criptografa as senhas ao passar para o banco
 python-jose[cryptography]: - criação de tokens jwt, saber que o usuário esta logado dps do login
 python-dotenv - lê arquivos dentro do .env
 python-multipart - dependencia do python jose
+
+pip install sqlalchemy_utils, para permitir entrada apenas de determinados valores no banco de dados
+pip install alembic, usado para fazer altarar a estrutura do banco de dados (criar coluna, criar tabela etc.), não sendo necessário apagar o banco inteiro e criar um novo do zero
+muito usado com o sqlalchemy, tb gera o historico de versoes do banco de dados, ou seja, a cada migracao ele guarda a anterior na pasta alembic/versions
+
+--Alembic 
+
+alembic revision --autogenerate -m "Initial Migration" #migração inicial do banco models, tem que colocar o link do banco no alembic.ini e importar o models na env
+#esse comando gera o arquivo de migração no alembic/versions
+
+alembic upgrade head #esse comando gera o banco a partir do arquivo mais recente na versions
+

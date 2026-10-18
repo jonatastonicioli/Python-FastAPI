@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-minha_api = FastAPI() #criando o obeto minha_api coma classe FastAPI, sem nenhum parametro
+minha_api = FastAPI() #criando o objeto/instancia minha_api coma classe FastAPI, sem nenhum parametro
 
 from auth_routes import auth_router #importar as rotas dps de ter criado o objeto
 from order_routes import order_router
