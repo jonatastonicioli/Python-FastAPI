@@ -11,6 +11,8 @@ python-jose[cryptography]: - criação de tokens jwt, saber que o usuário esta 
 python-dotenv - lê arquivos dentro do .env
 python-multipart - dependencia do python jose
 
+uvicorn main:minha_api --reload para rodar o server
+
 pip install sqlalchemy_utils, para permitir entrada apenas de determinados valores no banco de dados
 pip install alembic, usado para fazer altarar a estrutura do banco de dados (criar coluna, criar tabela etc.), não sendo necessário apagar o banco inteiro e criar um novo do zero
 muito usado com o sqlalchemy, tb gera o historico de versoes do banco de dados, ou seja, a cada migracao ele guarda a anterior na pasta alembic/versions
