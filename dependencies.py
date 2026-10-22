@@ -5,7 +5,11 @@ from models import db
 from sqlalchemy.orm import sessionmaker # fábrica de sessões, usadas pra adicionar, buscar e salvar dados no banco
 
 def pegar_sessao(): #funcao criada criar a conexão com o banco e gerar uma sessao  nele
-     Session = sessionmaker(bind=db) #gera uma fabrica de sessões, conectada com o banco
-     session = Session() #gera o objeto que sera usado para gerar consulta
+     try: #tente criar a session
+          Session = sessionmaker(bind=db) #gera uma fabrica de sessões, conectada com o banco
+          session = Session() #gera o objeto que sera usado para gerar consulta
+          
+          yield session #yeald é tipo um return mas que nao encerra a funcao, permitindo dar comandos apos ele
 
-     return session
+     finally: #se deu erro ou a funcao vai ser fechaca, o finally é executado se tiver erro ou noa
+          session.close() #fechar sessao

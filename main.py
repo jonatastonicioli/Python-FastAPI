@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI #importando o fastAPI
+from passlib.context import CryptContext #biblioteca de criptografia de senhas
+from dotenv import load_dotenv
 
 minha_api = FastAPI() #criando o objeto/instancia minha_api coma classe FastAPI, sem nenhum parametro
 
