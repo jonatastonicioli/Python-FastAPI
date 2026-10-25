@@ -11,5 +11,5 @@ def pegar_sessao(): #funcao criada criar a conexão com o banco e gerar uma sess
           
           yield session #yeald é tipo um return mas que nao encerra a funcao, permitindo dar comandos apos ele
 
-     finally: #se deu erro ou a funcao vai ser fechaca, o finally é executado se tiver erro ou noa
+     finally: #se deu erro ou nao a session sempre vai ser fechada, o finally é executado se tiver erro ou noa
           session.close() #fechar sessao
