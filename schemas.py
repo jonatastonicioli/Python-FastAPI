@@ -16,3 +16,7 @@ class UsuarioSchema(BaseModel):
 
     # class Config:
     #     from_attributes = True
+
+class PedidoSchema(BaseModel): #pedido nao recebe nem id nem status nem valor nem preço, apenas o usuario.
+    id_usuario: int #foreign key da tabela usuario
+    
