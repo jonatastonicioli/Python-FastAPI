@@ -5,7 +5,7 @@ from models import Usuario, db
 from sqlalchemy.orm import Session 
 from dependencies import pegar_sessao #importa a funcao pegar_sessao do arquivo dependencies
 from main import bcrypt_context #usar o bcrypt_context declarado na main para criptografar a senha
-from schemas import UsuarioSchema #usando schemas para os dados nao serem enviados no URL mas sim como JSON dentro da rota
+from schemas import UsuarioSchema, LoginSchema #usando schemas para os dados nao serem enviados no URL mas sim como JSON dentro da rota
 
 
 auth_router = APIRouter(prefix="/auth", tags=["Rotas de Autenticacao"]) #tudo de autenticacao vai estar no prefixo dominio/auth, a tag é o nome que vai estar no /docs
@@ -43,6 +43,16 @@ async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(
         session.commit() #sobe o novo usuario para o banco
 
         return {"Mensagem": f"Usuário cadastrado com sucesso {usuario_schema.email}"} 
+
+#login -> email e senha -> gera JWT token -> JWT(JSON Web Token) token é utilizado para acessar outras rotas.
+@auth_router.post("/login")
+async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sessao)): #para realizar o login tem que receber a sessão do banco + email e senha do schema login
+    
+    usuario = session.query(Usuario).filter(Usuario.email == login_schema.email).first() #verifica se o email que o usuario inseriu existe no banco
+
+    if usuario:
+        ...
+    
 
 
     

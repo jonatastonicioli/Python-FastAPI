@@ -19,4 +19,8 @@ class UsuarioSchema(BaseModel):
 
 class PedidoSchema(BaseModel): #pedido nao recebe nem id nem status nem valor nem preço, apenas o usuario.
     id_usuario: int #foreign key da tabela usuario
+
+class LoginSchema(BaseModel):
+    email: str
+    senha: str
     
