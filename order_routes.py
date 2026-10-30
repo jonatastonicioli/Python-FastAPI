@@ -18,9 +18,10 @@ async def pedidos():
     return {"mensagem": "Você acessou a rota pedidos"} #dicionario
 
 @order_router.post("/pedido")
-async def criar_pedido(schema_pedido: PedidoSchema, session: Session = Depends(pegar_sessao)):
+async def criar_pedido(schema_pedido: PedidoSchema, session: Session = Depends(pegar_sessao)): #para criar um pedido so precisa passar o id do usuario
+    #pois o status e o preco serao calculados dps
 
-    novo_pedido = Pedido(usuario = schema_pedido.id_usuario)
+    novo_pedido = Pedido(usuario = schema_pedido.id_usuario) 
     session.add(novo_pedido)
     session.commit()
     return{"mensagem": f"Seu pedido foi criado com sucesso. ID do Pedido: {novo_pedido.id}"}

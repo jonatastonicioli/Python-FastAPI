@@ -10,6 +10,21 @@ from schemas import UsuarioSchema, LoginSchema #usando schemas para os dados nao
 
 auth_router = APIRouter(prefix="/auth", tags=["Rotas de Autenticacao"]) #tudo de autenticacao vai estar no prefixo dominio/auth, a tag é o nome que vai estar no /docs
 
+def criar_token(id_usuario):
+    token = f"dsoadosanodnm{id_usuario}"
+    return token
+
+def autenticar_usuario (email, senha, session):
+    usuario = session.query(Usuario).filter(Usuario.email==email).first() #procura se tem um usuario com um email passado como parametro
+    if not usuario: #nao achou o email passado como parametro no banco
+        return False
+    elif not bcrypt_context.verify(senha, usuario.senha): #verifica se a senha criptografada cadastrada no banco é igual a senha passado pelo usuario, para isso tem que criptografar
+        #a senha passada pelo usuario (a funcao verify faz isso + verifica o salt), se nao bater cai no elif
+        return False
+    else: #se o email passado existe e a senha passada é igual a do banco a funcao retorna o objeto usuario correto
+        return usuario
+
+
 @auth_router.get("/")
 async def home():
     """
@@ -48,11 +63,21 @@ async def criar_conta(usuario_schema: UsuarioSchema, session: Session = Depends(
 @auth_router.post("/login")
 async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sessao)): #para realizar o login tem que receber a sessão do banco + email e senha do schema login
     
-    usuario = session.query(Usuario).filter(Usuario.email == login_schema.email).first() #verifica se o email que o usuario inseriu existe no banco
+    usuario = autenticar_usuario(login_schema.email, login_schema.senha, session) #verificando se o usuario esta autenteico usando a funcao declarada no topo do auth_routes
 
-    if usuario:
-        ...
+    if not usuario: #se nao for encontrado usuario com o email passado da msg de erro
+         
+         raise HTTPException(status_code=400, detail = "Usuário não encontrado ou senha incorreta")
     
+    else:
+        access_token = criar_token(usuario.id)
+
+        return {
+            "access_token": access_token,
+            "token_type": "Bearer"
+        }
+        # JWT TOKEN BEARER 
+        # headers = {"Access-Token : Bearer token"}       
 
 
     
