@@ -6,6 +6,9 @@ import os
 load_dotenv() #lê o .env e carrega as variáveis
 
 SECRET_KEY = os.getenv("SECRET_KEY") #procura no arquivo .env a secret_key e retorna para variavel o valor encontrado, uso no JWT token
+ALGORITHM = os.getenv("ALGORITHM") #tipo de algoritmo usado no JWT token
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")) #quanto tempo o token vai levar para expirar
+
 
 minha_api = FastAPI() #criando o objeto/instancia minha_api coma classe FastAPI, sem nenhum parametro
 

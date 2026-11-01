@@ -24,3 +24,19 @@ alembic revision --autogenerate -m "Initial Migration" #migração inicial do ba
 
 alembic upgrade head #esse comando gera o banco a partir do arquivo mais recente na versions
 
+--JWT token
+
+O JWT token é um token gerado para autenticar um usuário que conseguiu realizar o login no sistema, o login gera um token que será utilizado como porta de acesso
+as outras rotas do sistema por um tempo predeterminado.
+
+O token JWT é composto por 3 strings
+
+HEADER.PAYLOAD.SIGNATURE
+
+Header: armazena o algoritmo de criptografia e o tipo de token (nesse caso JWT)
+Payload: é onde os dados são armazenados (sub: id_usuario, exp: expiração do token)
+Signature: codifica o header e o payload usando a SECRET_KEY, impossibilitando a modificação e a criação de tokens alheios ao sistema
+
+O token JWT pode ser descriptografado facilmente (por isso so usamos id_usuario e expiracao do token), mas um token válido não pode ser
+gerado pois seria necessário a SECRET_KEY.
+

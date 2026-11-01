@@ -5,14 +5,23 @@ from models import Usuario, db
 from sqlalchemy.orm import Session 
 from dependencies import pegar_sessao #importa a funcao pegar_sessao do arquivo dependencies
 from main import bcrypt_context #usar o bcrypt_context declarado na main para criptografar a senha
+from main import ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY #criação do JWT token
 from schemas import UsuarioSchema, LoginSchema #usando schemas para os dados nao serem enviados no URL mas sim como JSON dentro da rota
+from jose import jwt, JWTError
+from datetime import datetime, timedelta, timezone
 
 
 auth_router = APIRouter(prefix="/auth", tags=["Rotas de Autenticacao"]) #tudo de autenticacao vai estar no prefixo dominio/auth, a tag é o nome que vai estar no /docs
 
-def criar_token(id_usuario):
-    token = f"dsoadosanodnm{id_usuario}"
-    return token
+def criar_token(id_usuario, duracao_token = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)): #passar id_usuario obrigatoriamente, e se nao passar a duração do token
+#ele durará 30 minutos que é oq está no ACCESS_TOKEN_EXPIRE_MINUTES
+   
+    data_expiracao = datetime.now(timezone.utc) + duracao_token  #o token expirará 30 minutos após a hora atual (timezone.utx = fuso horário do greenwich)
+    dic_info ={"sub": id_usuario, "exp": data_expiracao} #id_usuario = sub, exp=data_expiracao
+
+    jwt_codificado = jwt.encode(dic_info, SECRET_KEY, ALGORITHM)
+
+    return jwt_codificado
 
 def autenticar_usuario (email, senha, session):
     usuario = session.query(Usuario).filter(Usuario.email==email).first() #procura se tem um usuario com um email passado como parametro
@@ -24,6 +33,9 @@ def autenticar_usuario (email, senha, session):
     else: #se o email passado existe e a senha passada é igual a do banco a funcao retorna o objeto usuario correto
         return usuario
 
+def verificar_token(refreshtoken, session):
+    usuario = session.query(Usuario).filter(Usuario.id =='1').first()
+    return usuario
 
 @auth_router.get("/")
 async def home():
@@ -71,13 +83,30 @@ async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sess
     
     else:
         access_token = criar_token(usuario.id)
+        refresh_token = criar_token(usuario.id, timedelta(days=7))
+
 
         return {
             "access_token": access_token,
+            "refresh_token": refresh_token,
             "token_type": "Bearer"
         }
         # JWT TOKEN BEARER 
         # headers = {"Access-Token : Bearer token"}       
+
+@auth_router.get("/refresh")  
+async def use_refresh_token (refreshtoken, session: Session = Depends(pegar_sessao)):
+    #verificar se o resfresh token ainda é valido (<7 dias)
+
+    usuario = verificar_token(refreshtoken, session) #a funcao verificar token precisa descriptografar o JWT e retornar qual o usuario gerou aql token
+
+    access_token = criar_token(usuario.id)
+
+    return {
+        "access_token": access_token,
+        "token_type": "Bearer"
+    }
+
 
 
     
