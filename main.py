@@ -2,6 +2,8 @@ from fastapi import FastAPI #importando o fastAPI
 from passlib.context import CryptContext #biblioteca de criptografia de senhas
 from dotenv import load_dotenv #conseguir ler o arquivo .env para trazer a secret_key usada para criptografar
 import os 
+from fastapi.security import OAuth2PasswordBearer #usado para na funcao verificar_token(dependencies.py) para receber o refresh_token como header e nao como parametro para as requisições, 
+#sem isso o token seria passando como query oq é inseguro
 
 load_dotenv() #lê o .env e carrega as variáveis
 
@@ -11,6 +13,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")) #qua
 
 
 minha_api = FastAPI() #criando o objeto/instancia minha_api coma classe FastAPI, sem nenhum parametro
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto") #gera o objeto que é capaz de gerar o hash da senha (usa nas auth_routes)
 
